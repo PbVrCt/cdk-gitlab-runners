@@ -1,0 +1,37 @@
+concurrent=0
+log_level="debug"
+
+[[runners]]
+    name="gitlab_ci_1"
+    url = "https://gitlab.com"
+    executor = "docker"
+    environment = ["DOCKER_AUTH_CONFIG=<DockerAuthConfig>"]
+    [runners.docker]
+        image = "alpine"
+        privileged = true
+        disable_cache = true
+        # volumes = ["/path/to/your/config.json:/etc/docker/config.json"] 
+    [runners.cache]
+        Type = "s3"
+        Shared = true
+        [runners.cache.s3]
+            ServerAddress = "s3.amazonaws.com"
+            BucketName = "<CacheBucketName>"
+            BucketLocation = "<CacheBucketRegion>"
+
+# I planed to include the docker executor on this project, but I was unable to authenticate
+# to container image repositories using it. And, since I had already spent way more time on this project than I expected to,
+# I decided to leave the docker executor out of the readme.
+# You can still use this file and register a worker with the docker executor.
+# However, I don't see why you would choose it over the docker machine executor,
+# given that this repository addresses the additional dificulty in setting up the latter.
+# That said, if you choose to use the Docker executor, consider that it runs the jobs in containers on the same on-demand instance where you register the worker,
+# so to set it up, you have to grant the host instance permissions to the AWS services you want to call,
+# instead of granting permissions to child instances through an instance profile, as is done with the docker machine executor.
+
+# The values enclosed by < >, such as the VPC ID and bucket name, are replaced by the actual values from the infrastructure
+# stacks during the bastion instance initialization scripts.
+
+# The concurrent parameter is specified on the bastion instance stack. It is replaced once all workers are registered.
+# If you try to specify the concurrent parameter on this file when registering a worker, it will not work, based on this issue:
+# https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1539

@@ -1,0 +1,64 @@
+# The concurrent parameter is shared across workers and is not specified here. See the comments below.
+concurrent=0
+check_interval=0
+shutdown_timeout=0
+log_level="debug"
+
+[session_server]
+  session_timeout = 1800
+
+[[runners]]
+    url = "https://gitlab.com"
+    executor = "docker+machine"
+    environment = ["DOCKER_AUTH_CONFIG=<DockerAuthConfig>"]
+    [runners.docker]
+        image = "alpine"
+        privileged = true
+        disable_cache = true
+    [runners.cache]
+        Type = "s3"
+        Shared = true
+        [runners.cache.s3]
+            ServerAddress = "s3.amazonaws.com"
+            BucketName = "<CacheBucketName>"
+            BucketLocation = "<CacheBucketRegion>"
+    [runners.machine]
+        IdleCount = 2
+        IdleTime = 360
+        MachineDriver = "amazonec2"
+        MachineName = "gitlab-docker-machine-%s"
+        MachineOptions = [
+            "amazonec2-iam-instance-profile=<ChildRunnersInstancesInstanceProfileName>",
+            # Do not remove these 2 tags.
+            "amazonec2-tags=bastion_instance_id,<BastionInstanceId>,bastion_instance_auto_scaling_group_name,<BastionInstanceAutoScalingGroupName>",
+            "amazonec2-region=<EC2Region>",
+            # Choose x86 instance types
+            "amazonec2-instance-type=t3.micro",
+            "amazonec2-vpc-id=<ChildRunnersInstancesVpcId>",
+            "amazonec2-use-private-address=true",
+            "amazonec2-request-spot-instance=true",
+            "amazonec2-spot-price=0.07",
+        ]
+
+# Choose x86 instance types for the amazonec2-instance-type. For example, use t3 type instances instead of t4g ones.
+# x86 instance types are needed to ensure compatibility with the default AMI that Gitlab Runner uses for the child instances.
+# To leverage AWS Graviton, specify your own AMI in the [runners.machine] section.
+
+# The two tags "bastion_instance_id" and "bastion_instance_autoscaling_group_name" ared used by the cleanup lambdas
+# to terminate the child instances corresponding to a terminating bastion instance. Removing them will break the lambdas.
+
+# The concurrent parameter is specified on the bastion instance stack. It is replaced once all workers are registered.
+# If you try to specify the concurrent parameter on this file when registering a worker, it will not work, based on this issue:
+# https://gitlab.com/gitlab-org/gitlab-runner/-/issues/1539
+
+# The values enclosed by < >, such as the VPC ID and bucket name, are replaced by the actual values from the infrastructure
+# stacks during the bastion instance initialization scripts.
+
+# The amazonec2-security-group field is not for specifying the security group of the child instances, but for naming it. Here, the field is omitted,
+# following the cdk best practice of not specifying resource names when unnecessary.
+
+# If the bastion instance repeteadly initializes and shuts down new instances, raise the spot price.
+
+# If the bastion instance fails to raise spot instances more than 60 times, run the following line:
+# docker-machine ls -q --filter state=Error --format "{{.MAME}}"
+# ( Source: https://docs.gitlab.com/runner/configuration/runner_autoscale_aws/#caveats-of-spot-instances as of 2023-05-19)

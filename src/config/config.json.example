@@ -1,0 +1,6 @@
+{
+  "account_id": "111111111111",
+  "region": "us-east-1",
+  "project_name": "GitlabRunners",
+  "use_nat_gateway": false
+}
