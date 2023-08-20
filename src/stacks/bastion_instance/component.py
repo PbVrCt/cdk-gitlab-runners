@@ -27,7 +27,7 @@ class BastionInstance(Stack):
     def __init__(
         self,
         scope: Construct,
-        id: str,
+        id_: str,
         env: Environment,
         vpc: ec2.Vpc,
         cache_bucket_name: str,
@@ -43,7 +43,7 @@ class BastionInstance(Stack):
         inline_policies: dict = {},
         **kwargs,
     ) -> None:
-        super().__init__(scope, id, env=env, **kwargs)
+        super().__init__(scope, id_, env=env, **kwargs)
 
         # Infrastructure
 

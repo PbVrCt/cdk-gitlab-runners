@@ -24,16 +24,16 @@ class Vpc(Stack):
     def __init__(
         self,
         scope: Construct,
-        id: str,
+        id_: str,
         env: Environment,
         use_nat_gateways: bool,
         expose_port_22: bool = False,
         **kwargs
     ) -> None:
-        super().__init__(scope, id, env=env, **kwargs)
+        super().__init__(scope, id_, env=env, **kwargs)
 
         self._expose_port_22 = expose_port_22
-        
+
         # Infrastructure
 
         self.vpc_ = Vpc_(self, "Vpc", use_nat_gateways, expose_port_22)
@@ -42,7 +42,7 @@ class Vpc(Stack):
             self, "LambdaFunctions", self.vpc_.vpc.vpc_id
         )
 
-        # Trigger a cleanup lambda when this stack is being deleted, using a custom resource 
+        # Trigger a cleanup lambda when this stack is being deleted, using a custom resource
 
         provider = cr.Provider(
             self,

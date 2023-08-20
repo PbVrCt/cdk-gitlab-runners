@@ -10,20 +10,19 @@ class Vpc_(Construct):
     def __init__(
         self,
         scope: Construct,
-        id: str,
+        id_: str,
         use_nat_gateways: bool,
         expose_port_22: bool,
         **kwargs
     ):
-        super().__init__(scope, id, **kwargs)
+        super().__init__(scope, id_, **kwargs)
 
-        """NOTE:
-        By default the CDK creates a Security group that does not allow inbound traffic.
-        By default the CDK creates the Internet gateway, and one Nat gateway per availability zone
-        By default the CDK creates NetworkACLs (for the subnets) that allow all inbound and outbound traffic.
-        By default the CDK creates a route table for each subnet, connecting it either to a NAT Gateway or the Internet Gateway.
-        By default the CDK allocates the 10.0.0.0/16 address range, exhaustively spread across all subnets in the subnet configuration.
-        """
+        # NOTE:
+        # By default the CDK creates a Security group that does not allow inbound traffic.
+        # By default the CDK creates the Internet gateway, and one Nat gateway per availability zone
+        # By default the CDK creates NetworkACLs (for the subnets) that allow all inbound and outbound traffic.
+        # By default the CDK creates a route table for each subnet, connecting it either to a NAT Gateway or the Internet Gateway.
+        # By default the CDK allocates the 10.0.0.0/16 address range, exhaustively spread across all subnets in the subnet configuration.
 
         if use_nat_gateways:
             self._vpc = ec2.Vpc(
@@ -70,10 +69,9 @@ class Vpc_(Construct):
                 connection=ec2.Port.tcp(22),
                 description="For the developper to ssh into the parent instance",
             )
-        
+
         # S3 Gateway endpoint
-            
+
         self._vpc.add_gateway_endpoint(
-            "S3GatewayEndpoint",
-            service=ec2.GatewayVpcEndpointAwsService.S3
+            "S3GatewayEndpoint", service=ec2.GatewayVpcEndpointAwsService.S3
         )

@@ -21,7 +21,7 @@ class EC2Instance(Construct):
     def __init__(
         self,
         scope: Construct,
-        id: str,
+        id_: str,
         vpc: ec2.Vpc,
         cache_bucket_name: str,
         cache_bucket_arn: str,
@@ -34,7 +34,7 @@ class EC2Instance(Construct):
         inline_policies: dict = {},
         **kwargs,
     ):
-        super().__init__(scope, id, **kwargs)
+        super().__init__(scope, id_, **kwargs)
 
         # Validate the worker_registrations argument
 
@@ -161,15 +161,14 @@ class EC2Instance(Construct):
 
         # Bastion instance security group
 
-        """NOTE:
-        The runner manager in the bastion instance takes care of creating a new security group for the child instances.
-        This security group includes an ingress rule on port TCP 2376, allowing the runner manager to use the Docker daemon API for communication.
-        An ingress rule on port TCP 22 also exists; I suppose to enable developers to SSH into the child instances instances from the bastion instance.
+        # NOTE:
+        # The runner manager in the bastion instance takes care of creating a new security group for the child instances.
+        # This security group includes an ingress rule on port TCP 2376, allowing the runner manager to use the Docker daemon API for communication.
+        # An ingress rule on port TCP 22 also exists; I suppose to enable developers to SSH into the child instances instances from the bastion instance.
 
-        NOTE:
-        Instance security groups and VPC security group are two distinct security groups.
-        You can fin the specifications for the VPC security group in the VPC stack.
-        """
+        # NOTE:
+        # Instance security groups and VPC security group are two distinct security groups.
+        # You can fin the specifications for the VPC security group in the VPC stack.
 
         instance_security_group = ec2.SecurityGroup(
             self, "EC2SecurityGroup", vpc=vpc, allow_all_outbound=True
@@ -298,10 +297,10 @@ class EC2Instance(Construct):
 
         # Cloudformation Init setup
 
-        """NOTE:
-        With Amazon Linux AMIs, Cloudformation Init comes enabled by default.
-        As you are using an Ubuntu Server AMI, the user_data script below is required for the cloudformation_init script to function
-        https://github.com/aws/aws-cdk/issues/9841#issuecomment-1025003320"""
+        # NOTE:
+        # With Amazon Linux AMIs, Cloudformation Init comes enabled by default.
+        # As you are using an Ubuntu Server AMI, the user_data script below is required for the cloudformation_init script to function
+        # https://github.com/aws/aws-cdk/issues/9841#issuecomment-1025003320"""
 
         user_data = ec2.UserData.for_linux()
         user_data.add_commands(

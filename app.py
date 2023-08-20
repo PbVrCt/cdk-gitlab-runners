@@ -12,8 +12,9 @@ app = App()
 
 # Configuration
 
-with open("./src/config/config.json", "r") as f:
+with open("./src/config/config.json", "r", encoding="utf-8") as f:
     config = json.load(f)
+    project_name = config["project_name"]
 
 worker_registration = {
     "config_file": "src/config/docker_machine_example.toml",
@@ -25,31 +26,27 @@ worker_registration = {
 
 class AppStage(Stage):
     def __init__(
-        self, scope: Construct, id: str, env: Environment, outdir=None, **kwargs
+        self, scope: Construct, id_: str, env: Environment, outdir=None, **kwargs
     ):
-        super().__init__(scope, id, env=env, outdir=outdir, **kwargs)
+        super().__init__(scope, id_, env=env, outdir=outdir, **kwargs)
 
         vpc_stack = Vpc(
             self,
-            "{}Vpc".format(config["project_name"]),
+            f"{project_name}Vpc",
             env=env,
             use_nat_gateways=config["use_nat_gateways"],
             expose_port_22=False,
         )
 
-        cache_bucket_stack = CacheBucket(
-            self, "{}CacheBucket".format(config["project_name"]), env=env
-        )
+        cache_bucket_stack = CacheBucket(self, f"{project_name}CacheBucket", env=env)
 
         cleanup_lambdas_stack = CleanupLambdas(
-            self,
-            "{}CleanupLambdas".format(config["project_name"]),
-            env=env,
+            self, f"{project_name}CleanupLambdas", env=env
         )
 
         BastionInstance(
             self,
-            "{}BastionInstance".format(config["project_name"]),
+            f"{project_name}BastionInstance",
             env=env,
             vpc=vpc_stack.vpc,
             cache_bucket_name=cache_bucket_stack.bucket_name,

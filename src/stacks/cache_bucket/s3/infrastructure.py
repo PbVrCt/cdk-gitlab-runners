@@ -11,8 +11,8 @@ class Bucket(Construct):
     def bucket_arn(self):
         return self._bucket.bucket_arn
 
-    def __init__(self, scope: Construct, id: str, **kwargs):
-        super().__init__(scope, id, **kwargs)
+    def __init__(self, scope: Construct, id_: str, **kwargs):
+        super().__init__(scope, id_, **kwargs)
 
         self._bucket = s3.Bucket(
             self,

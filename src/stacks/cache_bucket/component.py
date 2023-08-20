@@ -13,7 +13,7 @@ class CacheBucket(Stack):
     def bucket_arn(self):
         return self._bucket.bucket_arn
 
-    def __init__(self, scope: Construct, id: str, env: Environment, **kwargs) -> None:
-        super().__init__(scope, id, env=env, **kwargs)
+    def __init__(self, scope: Construct, id_: str, env: Environment, **kwargs) -> None:
+        super().__init__(scope, id_, env=env, **kwargs)
 
         self._bucket = Bucket(self, "S3Bucket")
