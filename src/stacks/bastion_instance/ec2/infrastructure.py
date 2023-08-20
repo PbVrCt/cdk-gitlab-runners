@@ -30,8 +30,8 @@ class EC2Instance(Construct):
         worker_registrations: list[dict],
         ssh_key_pair_name: str,
         instance_security_group_expose_port_22: bool,
-        managed_policies: list = [],
-        inline_policies: dict = {},
+        managed_policies: list,
+        inline_policies: dict,
         **kwargs,
     ):
         super().__init__(scope, id_, **kwargs)

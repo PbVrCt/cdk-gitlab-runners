@@ -56,8 +56,6 @@ class AppStage(Stage):
             instance_size=ec2.InstanceSize.NANO,  # Adjust between NANO, MICRO and SMALL based on the number of concurrent jobs.
             max_concurrent_jobs_across_workers=40,  # More than 40: SMALL, Less than 40: NANO or MICRO.
             worker_registrations=[worker_registration],
-            ssh_key_pair_name="SSHKey",
-            instance_security_group_expose_port_22=True,
         )
 
         # Add tags to all app resources

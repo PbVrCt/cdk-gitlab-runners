@@ -38,7 +38,7 @@ class BastionInstance(Stack):
         max_concurrent_jobs_across_workers: int,
         worker_registrations: list[dict],
         ssh_key_pair_name: str = "",
-        instance_security_group_expose_port_22: list = [],
+        instance_security_group_expose_port_22: bool = False,
         managed_policies: list = [],
         inline_policies: dict = {},
         **kwargs,
