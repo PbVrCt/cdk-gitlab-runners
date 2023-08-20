@@ -10,3 +10,5 @@ src/config/config.json
 .cdk.staging
 cdk.out
 cdk.context.json
+
+.vscode/settings.json
