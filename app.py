@@ -53,7 +53,7 @@ class AppStage(Stage):
             cache_bucket_arn=cache_bucket_stack.bucket_arn,
             cleanup_lambda_on_stack_deletion=cleanup_lambdas_stack.on_bastion_instance_stack_deletion_terminate_child_instances_function,
             cleanup_lambda_on_instance_termination=cleanup_lambdas_stack.on_bastion_instance_termination_terminate_child_instances_function,
-            instance_size=ec2.InstanceSize.NANO,  # Adjust between NANO, MICRO and SMALL based on the number of concurrent jobs.
+            instance_size=ec2.InstanceSize.MICRO,  # Adjust between NANO, MICRO and SMALL based on the number of concurrent jobs.
             max_concurrent_jobs_across_workers=40,  # More than 40: SMALL, Less than 40: NANO or MICRO.
             worker_registrations=[worker_registration],
         )

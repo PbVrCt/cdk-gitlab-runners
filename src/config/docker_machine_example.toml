@@ -23,7 +23,7 @@ log_level="debug"
             BucketName = "<CacheBucketName>"
             BucketLocation = "<CacheBucketRegion>"
     [runners.machine]
-        IdleCount = 2
+        IdleCount = 0
         IdleTime = 360
         MachineDriver = "amazonec2"
         MachineName = "gitlab-docker-machine-%s"
@@ -37,7 +37,7 @@ log_level="debug"
             "amazonec2-vpc-id=<ChildRunnersInstancesVpcId>",
             "amazonec2-use-private-address=true",
             "amazonec2-request-spot-instance=true",
-            "amazonec2-spot-price=0.07",
+            "amazonec2-spot-price=0.009",
         ]
 
 # Choose x86 instance types for the amazonec2-instance-type. For example, use t3 type instances instead of t4g ones.
