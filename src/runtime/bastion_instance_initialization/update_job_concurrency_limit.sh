@@ -6,5 +6,5 @@ CONFIG_FILE=/etc/gitlab-runner/config.toml # Gitlab Runner updates this file aft
 MAX_CONCURRENT_JOBS=$(cat $PARAMETERS_FILE | jq -r '.MaxConcurrentJobs')
 sudo sed -i "s|concurrent.*|concurrent = $MAX_CONCURRENT_JOBS|" $CONFIG_FILE
 
-# # Is this command needed?
+# Is this command needed?
 # sudo gitlab-runner restart

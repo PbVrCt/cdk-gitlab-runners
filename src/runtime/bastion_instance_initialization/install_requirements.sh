@@ -14,10 +14,9 @@ sudo ./aws/install
 
 # 0. Install aws-ecr-credential-helper and make it available to Gitlab Runner.
 
-"""NOTE:
-The aws-ecr-credential-helper installation remains commented out as the worker could not use the helper for authentication to ecr.
-If you want to use it inside the jobs, uncomment the following 3 lines and mount it in the job containers as a volume.
-"""
+# NOTE:
+# The aws-ecr-credential-helper installation remains commented out as the worker could not use the helper for authentication to ecr.
+# If you want to use it inside the jobs, uncomment the following 3 lines and mount it in the job containers as a volume.
 
 # sudo apt-get install amazon-ecr-credential-helper -y
 # sudo cp bin/docker-credential-ecr-login /usr/local/bin/
@@ -50,15 +49,14 @@ sudo apt-get update && sudo apt-get install docker-ce -y
 
 # 3. Install Docker Machine (CKI fork) (https://gitlab.com/gitlab-org/ci-cd/docker-machine/-/blob/main/docs/install-machine.md as of 2023-04)
 
-"""NOTE:
-The Gitlab fork of Docker Machine has an issue where spawned spot instances are untagged.
-https://gitlab.com/gitlab-org/ci-cd/docker-machine/-/issues/112
-A solution is available in the comments: Install the CKI fork instead.
-(The tags are used for the deletion of child instances when terminating the bastion instance)
+# NOTE:
+# The Gitlab fork of Docker Machine has an issue where spawned spot instances are untagged.
+# https://gitlab.com/gitlab-org/ci-cd/docker-machine/-/issues/112
+# A solution is available in the comments: Install the CKI fork instead.
+# (The tags are used for the deletion of child instances when terminating the bastion instance)
 
-UPDATE 2023-08:
-The issue has been solved, but I haven't had the time to update the installed version and check that it works.
-"""
+# UPDATE 2023-08:
+# The issue has been solved, but I haven't had the time to update the installed version and check that it works.
 
 curl -L -o docker-machine-Linux-aarch64 https://arr-cki-prod-docker-machine.s3.amazonaws.com/v0.16.2-gitlab.19-cki.3/docker-machine-Linux-aarch64
 sudo cp docker-machine-Linux-aarch64 /usr/local/bin/docker-machine

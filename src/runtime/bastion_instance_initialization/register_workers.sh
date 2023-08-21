@@ -48,9 +48,9 @@ for (( i=0; i<$NUMBER_OF_WORKERS; i++ )); do
         done
     fi
 
-    # # Authenticate with DOCKER_AUTH_CONFIG. 
-    # # This did not work for ECR or with the docker executor.
-    # # To authenticate to ECR I tried multiple different things that I found over the internet.
+    # Authenticate with DOCKER_AUTH_CONFIG. 
+    # This did not work for ECR or with the docker executor.
+    # To authenticate to ECR I tried multiple things, for several days, to no avail.
 
     # FORMATTED_CREDENTIALS=$(jq -n --arg key0 "auths" --argjson val0 "{}" -n '[$key0, $val0] | { (.[0]): .[1]}')
     # NUM_REPOSITORIES=$(jq -r '.NonEcrRepositories | length' $PARAMETERS_FILE)
