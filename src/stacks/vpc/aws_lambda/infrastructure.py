@@ -7,7 +7,7 @@ from aws_lambda_shared.aws_lambda_construct import LambdaPython
 class LambdaFunctions(Construct):
     @property
     def on_vpc_stack_deletion_delete_vpc_dependencies_function(self):
-        return self._on_vpc_stack_deletion_delete_vpc_dependencies.fn
+        return self._on_vpc_stack_deletion_delete_vpc_dependencies.function
 
     def __init__(self, scope: Construct, id_: str, vpc_id: str, **kwargs):
         super().__init__(scope, id_, **kwargs)

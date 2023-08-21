@@ -8,11 +8,13 @@ from aws_lambda_shared.aws_lambda_construct import LambdaPython
 class LambdaFunctions(Construct):
     @property
     def on_bastion_instance_termination_terminate_child_instances_function(self):
-        return self._on_bastion_instance_termination_terminate_child_instances.fn
+        return self._on_bastion_instance_termination_terminate_child_instances.function
 
     @property
     def on_bastion_instance_stack_deletion_terminate_child_instances_function(self):
-        return self._on_bastion_instance_stack_deletion_terminate_child_instances.fn
+        return (
+            self._on_bastion_instance_stack_deletion_terminate_child_instances.function
+        )
 
     def __init__(self, scope: Construct, id_: str, **kwargs):
         super().__init__(scope, id_, **kwargs)

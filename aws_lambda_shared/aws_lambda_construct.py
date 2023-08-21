@@ -1,12 +1,22 @@
+"""
+Generic helper construct to define lambda functions.
+Consider replacing it by the CDK 'PythonFunction' L2 construct when it comes out.
+Or moving to the SST framework, as it has better support for developing lambdas.
+"""
+
 import os
+
 from typing import Union
 
 from constructs import Construct
 from aws_cdk import aws_lambda, aws_iam as iam, Duration, Aws
 
 
-# Generic helper construct. Consider replacing it by the CDK 'PythonFunction' L2 construct when it comes out. Or move to the SST framework
 class LambdaPython(Construct):
+    @property
+    def function(self):
+        return self._function
+
     def __init__(
         self,
         scope: Construct,
@@ -15,12 +25,12 @@ class LambdaPython(Construct):
         env_vars: Union[dict[str, str], None] = None,
         memory_size=128,
         timeout=Duration.seconds(3),
-        layers: list[str] = [],
+        layer_names: list[str] = None,
         **kwargs,
     ):
         super().__init__(scope, id_, **kwargs)
 
-        # Layers
+        # Lambda layers definition
 
         powertools_layer = aws_lambda.LayerVersion.from_layer_version_arn(
             self,
@@ -28,7 +38,10 @@ class LambdaPython(Construct):
             f"arn:aws:lambda:{Aws.REGION}:017000801446:layer:AWSLambdaPowertoolsPythonV2:26",
         )
 
-        # requests_2_29_layer = aws_lambda.LayerVersion(
+        # An example layer is commented out below.
+        # If you would like to add your own layers, additionally you would have to zip them into this repository.
+
+        # requests_layer = aws_lambda.LayerVersion(
         #     self,
         #     "RequestsLayer",
         #     code=aws_lambda.Code.from_asset(
@@ -45,20 +58,30 @@ class LambdaPython(Construct):
         #     description="requests library, version 2.29.0 . Later versions resulted in a packages versioning problem",
         # )
 
-        assert set(layers).issubset(
-            ["lambda_powertools"]
-        ), "Error: Invalid layer. Valid layers are: 'lambda_powertools'. See aws_lambda_constructs.py for more details."
-        layers_ = [powertools_layer]
-        # if "requests" in layers:
-        #     layers_.append(requests_2_29_layer)
+        # valid_layer_names = ["lambda_powertools", "requests"]
+        valid_layer_names = ["lambda_powertools"]
+
+        # Lambda layers validation
+
+        layers = []
+
+        if layer_names is not None:
+            assert set(layer_names).issubset(
+                valid_layer_names
+            ), "Error: Invalid layer. Valid layers are: 'lambda_powertools, requests'. See aws_lambda_constructs.py for more details."
+
+            # if "requests" in layer_names:
+            #     layers.append(requests_layer)
+
+        layers.append(powertools_layer)
 
         # Lambda definition
+
         handler_filepath_no_extension, _ = os.path.splitext(handler_filepath)
         handler_filename_no_extension = os.path.basename(handler_filepath_no_extension)
         handler_directory = os.path.dirname(handler_filepath)
 
-        self._id = id
-        self.fn = aws_lambda.Function(
+        self._function = aws_lambda.Function(
             self,
             id_,
             function_name=id_.replace("_", "-"),
@@ -67,21 +90,22 @@ class LambdaPython(Construct):
             handler=f"{handler_filename_no_extension}.handler",
             memory_size=memory_size,
             timeout=timeout,
-            layers=layers_,
+            layers=layers,
             environment=env_vars,
         )
+
         self._id = id_
 
-    # Add policy method
+    # Method to grant inline policies
 
-    def add_policy(self, actions: list[str], resources: list[str], managed=False):
-        policy_name = self._id + "-".join(
-            actions
-        )  # + "-".join(resources) ## "-".join(resources) does not work because the resouce arns are defined at deployment time
+    def add_policy(self, actions: list[str], resources: list[str]):
+        policy_name = self._id + "-".join(actions)
         policy_name = (
             policy_name.replace(":", "-").replace("/", "-").replace("*", "_")[:128]
         )
-        self.fn.role.attach_inline_policy(
+        # NOTE: The resouce arns are defined at deployment time, so I did not add them to the policy name.
+
+        self._function.role.attach_inline_policy(
             iam.Policy(
                 self,
                 policy_name,
