@@ -326,20 +326,23 @@ To give a worker permissions to AWS services, include the fieds:
 worker_registration = {
     "config_file": "src/config/docker_machine_example.toml",
     "token_secret_name": config["token_secret_name"],
-    "child_runners_managed_policies": [ # 👈 
-            iam.ManagedPolicy.from_aws_managed_policy_name("AmazonS3FullAccess"),
+    "child_runners_managed_policies": [  # 👈
+        iam.ManagedPolicy.from_aws_managed_policy_name("AmazonEventBridgeFullAccess"),
     ],
-    "child_runners_inline_policies": {  # 👈 
+    "child_runners_inline_policies": {  # 👈
         "ExampleChildRunnersInlinePolicies": iam.PolicyDocument(
-            statements=[ 
-                iam.PolicyStatement(actions=[
-                    "ecr:CompleteLayerUpload",
-                    "ecr:GetAuthorizationToken",
-                    "ecr:UploadLayerPart",
-                    "ecr:InitiateLayerUpload",
-                    "ecr:BatchCheckLayerAvailability",
-                    "ecr:PutImage"
-                ], resources=["*"])
+            statements=[
+                iam.PolicyStatement(
+                    actions=[
+                        "ecr:CompleteLayerUpload",
+                        "ecr:GetAuthorizationToken",
+                        "ecr:UploadLayerPart",
+                        "ecr:InitiateLayerUpload",
+                        "ecr:BatchCheckLayerAvailability",
+                        "ecr:PutImage",
+                    ],
+                    resources=["*"],
+                )
             ]
         )
     },
