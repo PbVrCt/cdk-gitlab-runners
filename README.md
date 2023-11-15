@@ -45,10 +45,10 @@ If you use Terraform instead of the CDK, consider [terraform-aws-gitlab-runner](
 1. [Basic usage](#basic-usage)
 2. [Scenarios:](#scenarios)
     - [Deploy multiple runners within the same bastion instance](#scenario-deploy-multiple-runners-within-the-same-bastion-instance)
-    - [Deploy multiple runners in different bastion instances](#scenario-deploy-multiple-runners-in-different-bastion-instances)
-    - [Grant permissions to aws services](#scenario-set-permissions-to-aws-services)
-    - [Grant permissions to private container image repositories](#scenario-set-permissions-to-aws-services)
-    - [Do a multi-region deployment](#scenario-do-a-multiregion-deployment)
+    - [Deploy multiple runners on different bastion instances](#scenario-deploy-multiple-runners-on-different-bastion-instances)
+    - [Grant permissions to aws services](#scenario-grant-permissions-to-aws-services)
+    - [Grant permissions to private container image repositories](#scenario-grant-permissions-to-private-container-image-repositories)
+    - [Do a multi-region deployment](#scenario-do-a-multi-region-deployment)
     - [Customize the networking configuration](#scenario-customize-the-networking-configuration)
     - [SSH into the bastion instance](#scenario-ssh-into-the-bastion-instance)
 3. [Next Gitlab Runner Auto-scaling architecture](#next-gitlab-runner-auto-scaling-architecture)
@@ -250,7 +250,7 @@ Each runner acts as a unit that polls the gitlab instance for jobs, executes the
 
     If you specified tags in step 1, you can now reference them in your **.gitlab-ci.yml** files to designate the runner to use for each job.
 
-## Scenario: Deploy multiple runners in different bastion instances
+## Scenario: Deploy multiple runners on different bastion instances
 
 <br/>
 
@@ -486,7 +486,7 @@ You can build and push images within a CI job by different methods. Below is one
     cdk deploy usa/\*
     ```
 
-## Scenario: Customize the network configuration
+## Scenario: Customize the networking configuration
 
 To tailor the networking configuration, you can modify the files that make up this repository.
 
